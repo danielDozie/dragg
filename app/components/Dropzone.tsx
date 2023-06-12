@@ -42,7 +42,7 @@ export default function Dropzone(): JSX.Element {
         maxSize: maxFileSize,
     });
 
-    //dropbox section
+    //Dropbox section
     function dropboxElements() {
         return (
             <>
@@ -69,7 +69,7 @@ export default function Dropzone(): JSX.Element {
         )
     }
 
-    //File list section. Dragging mutilpe files MAX 5. Drops all invalid files.
+    //File list section. Dragging mutilpe files
     function fileListElements() {
         return acceptedFiles.map((file, index) => (
             <div key={index}>
@@ -94,7 +94,7 @@ export default function Dropzone(): JSX.Element {
         ));
     };
 
-    //handle rejection
+    //handle error/rejection
     function fileRejectionElement() {
         return fileRejections.map(({file, errors}, index) => (
             <div key={index}>
@@ -119,7 +119,6 @@ export default function Dropzone(): JSX.Element {
             </div>
         ));
     }
-
     return (
         <>
             <div className='w-4/5 bg-white md:w-2/5 min-h-72 rounded-xl'>
@@ -133,10 +132,8 @@ export default function Dropzone(): JSX.Element {
                         </div>
                         <IoCloseOutline className='p-1 text-gray-600 rounded-md cursor-pointer bg-violet-50' size="24" />
                     </div>
-                    
                     {/* Dropbox */}
                     {dropboxElements()}
-                    
                     {/* Files and Progress */}
                     {fileListElements()}
                     {fileRejectionElement()}
@@ -184,7 +181,7 @@ export default function Dropzone(): JSX.Element {
     )
 }
 
-//create an svg progress ring
+//svg progress ring
 type PROGRESSRING = {
     stroke: number;
     radius: number;
