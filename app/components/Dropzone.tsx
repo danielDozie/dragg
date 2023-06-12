@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { IoCloseOutline } from 'react-icons/io5'
 import { AiOutlineQuestionCircle } from 'react-icons/ai'
 import { BsFileTextFill } from 'react-icons/bs'
+import { BiError } from 'react-icons/bi';
 
 export default function Dropzone(): JSX.Element {
     const [showProgress, setShowProgress] = useState<boolean>(false)
@@ -34,12 +35,11 @@ export default function Dropzone(): JSX.Element {
         })
     }, [])
 
-    const { getRootProps, getInputProps, isDragReject, isDragAccept, acceptedFiles } = useDropzone({
+    const { getRootProps, getInputProps, isDragReject, isDragAccept, acceptedFiles, fileRejections } = useDropzone({
         onDrop, accept: {
             'text/csv': ['.csv']
         },
         maxSize: maxFileSize,
-        maxFiles: 5,
     });
 
     //dropbox section
@@ -94,6 +94,32 @@ export default function Dropzone(): JSX.Element {
         ));
     };
 
+    //handle rejection
+    function fileRejectionElement() {
+        return fileRejections.map(({file, errors}, index) => (
+            <div key={index}>
+                {showProgress ? <div className='flex w-full p-2 mt-2 border-2 border-gray-200 rounded-lg'>
+                    <BiError className='p-1 text-red-400 border border-gray-200 rounded-md' size={28} />
+                    <div className='flex flex-col w-full gap-1 ml-4'>
+                            {errors.map(e => (
+                                <p key={e.code} className='text-[12px] text-bold text-red-500'>
+                                    { file.name} ~ {e.message} </p> 
+                            ))}
+                        <div className='flex justify-between w-full'>
+                            <div className="w-[92%] h-2 bg-gray-200 rounded-full">
+                                <div className="relative w-0 h-2 transition-all duration-1000 ease-out rounded-full bg-red-500" style={{ width: `${loadPercentage}%` }} />
+                            </div>
+                            <div className='w-[5%] -mt-1 mr-1'>
+                                <p className='text-[10px] text-gray-500'>{0}%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div> : null
+                }
+            </div>
+        ));
+    }
+
     return (
         <>
             <div className='w-4/5 bg-white md:w-2/5 min-h-72 rounded-xl'>
@@ -113,7 +139,7 @@ export default function Dropzone(): JSX.Element {
                     
                     {/* Files and Progress */}
                     {fileListElements()}
-                    
+                    {fileRejectionElement()}
                     {/* OR horizontal rule section */}
                     <div className="relative flex items-center py-5">
                         <div className="flex-grow border-t border-gray-300"></div>
